@@ -1,10 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import {usePlaidLink} from 'react-plaid-link';
+import { useIsAuthenticated } from '@azure/msal-react';
+
+import { useMsal } from "@azure/msal-react";
+
 
 const Home = () => {
   self.displayName = Home.name;
 
+  const isAuthenticated = useIsAuthenticated();
   const [linkToken, setLinkToken] = useState("");
+  const { instance, accounts, inProgress } = useMsal();
+
+  useEffect(() => {
+    // TODO: Fetch if user has account in database
+    if (isAuthenticated) {
+      fetch('//localhost:44347/api/auth', {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({email: accounts[0].username}),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.accountExists) {
+          // TODO: redirect to account creation page
+          window.location.href = "/site";
+        } else {
+          // TODO: direct to home page
+          window.location.href = "/sign-up";
+        }
+      });
+    }
+  },[isAuthenticated]);
 
   useEffect(() => {
     fetch('//localhost:44347/api/plaid/link_token', {
@@ -29,6 +58,7 @@ const Home = () => {
   });
 
   return <>
+  {isAuthenticated ? <p>Signed In</p> : <p>Please Sign In</p>}
   <button onClick={()=>open()} disabled={!ready}>Plaid Link</button>
     <div>
       <h1>Hello, world!</h1>

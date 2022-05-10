@@ -13,7 +13,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
         policy =>
         {
-            policy.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost");
+            policy.AllowAnyOrigin();
+            policy.AllowAnyHeader();
+            policy.AllowAnyMethod();
         });
 });
 
@@ -44,6 +46,7 @@ builder.Services.Configure<PlaidOptions>(builder.Configuration.GetSection(PlaidO
 builder.Services.AddSingleton<PlaidClient>();
 
 builder.Services.AddScoped<PlaidController>();
+builder.Services.AddScoped<DatabaseController>();
 
 var app = builder.Build();
 

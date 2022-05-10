@@ -3,7 +3,9 @@ import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLi
 import { useIsAuthenticated } from "@azure/msal-react";
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
-import { SignInButton } from './signInButton';
+import { SignInButton } from './SignInButton';
+import { SignOutButton } from './SignOutButton';
+
 
 export const NavMenu = (props) => {
   const isAuthenticated = useIsAuthenticated();
@@ -22,7 +24,11 @@ export const NavMenu = (props) => {
               <NavItem>
                 <NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
               </NavItem>
-              {isAuthenticated ? <span>Signed In</span> : <SignInButton />}
+              <NavItem>
+                {isAuthenticated ? <NavLink><SignOutButton/></NavLink> :
+                  <NavLink><SignInButton/></NavLink>
+                }
+              </NavItem>
             </ul>
         </Container>
       </Navbar>

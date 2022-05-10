@@ -16,6 +16,6 @@ export const SignInButton = () => {
     const { instance } = useMsal();
 
     return (
-        <Button variant="secondary" className="ml-auto" onClick={() => handleLogin(instance)}>Sign in using Redirect</Button>
+        <Button variant="secondary" className="ml-auto" onClick={() => handleLogin(instance)}>Sign In</Button>
     );
 }
