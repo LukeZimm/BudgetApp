@@ -10,10 +10,9 @@ const Home = () => {
 
   const isAuthenticated = useIsAuthenticated();
   const [linkToken, setLinkToken] = useState("");
-  const { instance, accounts, inProgress } = useMsal();
+  const { accounts } = useMsal();
 
   useEffect(() => {
-    // TODO: Fetch if user has account in database
     if (isAuthenticated) {
       fetch('//localhost:44347/api/auth', {
         method: 'post',
@@ -25,10 +24,8 @@ const Home = () => {
       .then(response => response.json())
       .then(data => {
         if (data.accountExists) {
-          // TODO: redirect to account creation page
           window.location.href = "/site";
         } else {
-          // TODO: direct to home page
           window.location.href = "/sign-up";
         }
       });

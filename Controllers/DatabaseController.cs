@@ -22,5 +22,18 @@ namespace BudgetApp.Controllers
             return new AuthResponse { accountExists = user != null };
             //return new Value() { value = request.email };
         }
+        [HttpPost("api/db/createuser")]
+        public async Task<Models.User> CreateUser(Models.User user)
+        {
+            while (true)
+            {
+                user.Id = Guid.NewGuid().ToString();
+                // check if user.Id already exists in database
+                if (!_dbcontext.Users.Any(m => m.Id == user.Id)) break;
+            }
+            await _dbcontext.Users.AddAsync(user);
+            await _dbcontext.SaveChangesAsync();
+            return user;
+        }
     }
 }

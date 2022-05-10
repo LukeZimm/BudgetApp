@@ -7,7 +7,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Cors;
 using Going.Plaid.Item;
 using BudgetApp.Models;
-using System.Web.Http;
 
 namespace BudgetApp.Controllers
 {
@@ -17,13 +16,15 @@ namespace BudgetApp.Controllers
     {
         private readonly Middleware.PlaidCredentials _credentials;
         private readonly PlaidClient _client;
+        private readonly DatabaseController _dbcontroller;
 
-        public PlaidController(IOptions<Middleware.PlaidCredentials> credentials, PlaidClient client)
+        public PlaidController(IOptions<Middleware.PlaidCredentials> credentials, PlaidClient client, DatabaseController dbcontroller)
         {
             _credentials = credentials.Value;
             _client = client;
+            _dbcontroller = dbcontroller;
         }
-        [Microsoft.AspNetCore.Mvc.HttpPost("api/plaid/link_token")]
+        [HttpPost("api/plaid/link_token")]
         public async Task<Value> LinkToken()
         {
             var result = await _client.LinkTokenCreateAsync(
@@ -37,16 +38,17 @@ namespace BudgetApp.Controllers
                 });
             return new Value { value = result.LinkToken };
         }
-        [Microsoft.AspNetCore.Mvc.HttpPost("api/plaid/access_token")]
-        public async Task<Value> AccessToken([FromUri] string publicToken)
+        [HttpPost("api/plaid/access_token")]
+        public async Task<Value> AccessToken(PlaidConnectRequest request)
         {
             var result = await _client.ItemPublicTokenExchangeAsync(
                 new ItemPublicTokenExchangeRequest()
                 {
-                    PublicToken = publicToken,
+                    PublicToken = request.publicToken,
                 });
-            _credentials.AccessToken = result.AccessToken;
-
+            //_credentials.AccessToken = result.AccessToken;
+            var user = new User { AccessToken = result.AccessToken, Email = request.email };
+            _ = _dbcontroller.CreateUser(user);
             return new Value { value = result.AccessToken };
         }
     }

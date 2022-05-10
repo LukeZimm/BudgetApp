@@ -2,8 +2,6 @@ import React, { useState, Component } from 'react';
 import { Route } from 'react-router';
 import { Layout } from './components/Layout';
 import Home from './Pages/Home';
-import { FetchData } from './components/FetchData';
-import { Counter } from './components/Counter';
 import SignUp from './Pages/SignUp';
 import Site from './Pages/Site';
 import './custom.css'
@@ -16,8 +14,6 @@ const App = () => {
       <Route exact path='/' component={Home} />
       <Route path='/sign-up' component={SignUp} />
       <Route path='/site' component={Site} />
-      {/* <Route path='/counter' component={Counter} />
-      <Route path='/fetch-data' component={FetchData} /> */}
     </Layout>
   );
 }
