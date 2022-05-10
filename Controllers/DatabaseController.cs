@@ -35,5 +35,19 @@ namespace BudgetApp.Controllers
             await _dbcontext.SaveChangesAsync();
             return user;
         }
+        [HttpPost("api/db/access_token")]
+        public async Task<String?> AccessToken(string id)
+        {
+            var user = await _dbcontext.Users.FirstOrDefaultAsync(m => m.Id == id);
+            if (user != null) return user.AccessToken;
+            else return null;
+        }
+        [HttpPost("api/db/user_id")]
+        public async Task<String?> UserId(string email)
+        {
+            var user = await _dbcontext.Users.FirstOrDefaultAsync(m => m.Email == email);
+            if (user != null) return user.Id;
+            else return null;
+        }
     }
 }

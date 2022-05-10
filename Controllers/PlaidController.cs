@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Cors;
 using Going.Plaid.Item;
 using BudgetApp.Models;
+using Going.Plaid.Accounts;
 
 namespace BudgetApp.Controllers
 {
@@ -50,6 +51,19 @@ namespace BudgetApp.Controllers
             var user = new User { AccessToken = result.AccessToken, Email = request.email };
             _ = _dbcontroller.CreateUser(user);
             return new Value { value = result.AccessToken };
+        }
+        [HttpPost("api/plaid/balances")]
+        public async Task<AccountsGetResponse> Balances(PlaidBalanceRequest request)
+        {
+            var userid = await _dbcontroller.UserId(request.email);
+            if (userid == null) return null;
+            _client.AccessToken = await _dbcontroller.AccessToken(userid);
+            var plaidrequest = new AccountsBalanceGetRequest()
+            {
+                Options = new AccountsBalanceGetRequestOptions()
+            };
+            var result = await _client.AccountsBalanceGetAsync(plaidrequest);
+            return result;
         }
     }
 }
