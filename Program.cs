@@ -1,6 +1,8 @@
 using BudgetApp.Context;
 using BudgetApp.Controllers;
 using BudgetApp.Middleware;
+using BudgetApp.Models.Mongo;
+using BudgetApp.Services;
 using Going.Plaid;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,6 +40,11 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseSqlServer(connectionstring);
     options.EnableSensitiveDataLogging();
 });
+
+builder.Services.Configure<DatabaseSettings>(
+    builder.Configuration.GetSection("DatabaseSettings"));
+
+builder.Services.AddSingleton<UsersService>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();

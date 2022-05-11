@@ -1,5 +1,6 @@
 ﻿using BudgetApp.Context;
 using BudgetApp.Models;
+using BudgetApp.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,9 +12,12 @@ namespace BudgetApp.Controllers
     public class DatabaseController : ControllerBase
     {
         private readonly ApplicationContext _dbcontext;
-        public DatabaseController(ApplicationContext dbcontext)
+        private readonly UsersService _usersService;
+
+        public DatabaseController(ApplicationContext dbcontext, UsersService usersService)
         {
             _dbcontext = dbcontext;
+            _usersService = usersService;
         }
         [HttpPost("api/auth")]
         public async Task<AuthResponse> Auth(AuthRequest request)
@@ -38,6 +42,7 @@ namespace BudgetApp.Controllers
         [HttpPost("api/db/access_token")]
         public async Task<String?> AccessToken(string id)
         {
+            Get();
             var user = await _dbcontext.Users.FirstOrDefaultAsync(m => m.Id == id);
             if (user != null) return user.AccessToken;
             else return null;
@@ -48,6 +53,12 @@ namespace BudgetApp.Controllers
             var user = await _dbcontext.Users.FirstOrDefaultAsync(m => m.Email == email);
             if (user != null) return user.Id;
             else return null;
+        }
+        [HttpGet("api/db/users")]
+        public async Task<List<Models.Mongo.User>> Get()
+        {
+            var users = await _usersService.GetAsync();
+            return users;
         }
     }
 }

@@ -55,7 +55,7 @@ const Site = () => {
         <>
             <h2>Accounts</h2>
             <ul>
-                {balances.accounts.map(account => <li>{account.name}: {account.balances.current}</li>)}
+                {balances.accounts.map(account => <li key={account.account_id}>{account.name}: {account.balances.current}</li>)}
             </ul>
         </>
         }
