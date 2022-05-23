@@ -21,6 +21,9 @@ namespace BudgetApp.Services
         public async Task<User?> GetAsync(string id) => 
             await _usersCollection.Find(x => x._id == id).FirstOrDefaultAsync();
 
+        public async Task<User?> GetEmailAsync(string email) =>
+            await _usersCollection.Find(x => x.Email == email).FirstOrDefaultAsync();
+
         public async Task CreateAsync(User newUser) => 
             await _usersCollection.InsertOneAsync(newUser);
 

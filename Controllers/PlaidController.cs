@@ -48,7 +48,7 @@ namespace BudgetApp.Controllers
                     PublicToken = request.publicToken,
                 });
             //_credentials.AccessToken = result.AccessToken;
-            var user = new User { AccessToken = result.AccessToken, Email = request.email };
+            var user = new Models.Mongo.User { AccessToken = result.AccessToken, Email = request.email };
             _ = _dbcontroller.CreateUser(user);
             return new Value { value = result.AccessToken };
         }

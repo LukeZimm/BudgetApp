@@ -1,4 +1,3 @@
-using BudgetApp.Context;
 using BudgetApp.Controllers;
 using BudgetApp.Middleware;
 using BudgetApp.Models.Mongo;
@@ -34,12 +33,6 @@ builder.Configuration.AddJsonFile(
     );
 
 var connectionstring = builder.Configuration.GetConnectionString("DefaultConnection");
-
-builder.Services.AddDbContext<ApplicationContext>(options =>
-{
-    options.UseSqlServer(connectionstring);
-    options.EnableSensitiveDataLogging();
-});
 
 builder.Services.Configure<DatabaseSettings>(
     builder.Configuration.GetSection("DatabaseSettings"));
